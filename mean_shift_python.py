@@ -6,6 +6,7 @@ import sys
 import copy
 import os
 
+
 def MeanShiftFactory(shift_each_point_standalone = True):
     if shift_each_point_standalone:
         return MeanShiftStandAlone()
