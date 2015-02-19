@@ -1,6 +1,7 @@
 import mean_shift_python as ms
 import point_sampler    
 import kde
+import matplotlib.pyplot as plt
 
 def run():
     # get all points
@@ -26,7 +27,7 @@ def run():
         num_points = 10)
 
     reference_points = c1 + c2 + c3
-    mean_shifter = ms.MeanShiftFactory(False)
+    mean_shifter = ms.MeanShift()
     mean_shift_result = mean_shifter.cluster(reference_points, kernel_bandwidth = 1.5)
     
     for i in range(len(mean_shift_result.shifted_points)):
@@ -34,11 +35,11 @@ def run():
         converged_point = mean_shift_result.shifted_points[i]
         print "(%5.2f, %5.2f)\t->\t(%5.2f, %5.2f)" % (original_point[0], original_point[1], converged_point[0], converged_point[1])
 
-    # Z = kde.matrix(reference_points, 4, .1, [0, 20, 0, 20])    
-    # for pt in reference_points:
-    #     plt.scatter(pt[0], pt[1])
-    # plt.scatter(points[0][0], points[0][1], s=200, c="red")
-    # plt.show()
+    for pt in reference_points:
+        plt.scatter(pt[0], pt[1], c="red")
+    for pt in mean_shift_result.shifted_points:
+        plt.scatter(pt[0], pt[1], c="black")
+    plt.show()
 
 
 if __name__ == '__main__':

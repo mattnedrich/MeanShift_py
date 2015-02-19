@@ -1,99 +1,59 @@
 
 import math
-import matplotlib.pyplot as plt
-import point_sampler as point_sampler
+import numpy as np
 import sys
-import copy
-import os
 
-def MeanShiftFactory(shift_each_point_standalone = True):
-    if shift_each_point_standalone:
-        return MeanShiftStandAlone()
-    else:
-        return MeanShiftBatch()
+def _gaussian_kernel(distance, bandwidth):
+    val = np.exp(-distance / bandwidth)**2
+    return val
 
+MIN_DISTANCE = 0.0000001
 class MeanShift(object):
-    def __init__(self):
-        pass
+    def __init__(self, kernel = _gaussian_kernel):
+        self.kernel = kernel
 
-    def cluster(self, original_points, kernel_bandwidth):
-        pass # abstract method
-
-    def _shift_point(self, p, points, kernel_bandwidth):
-        # from http://en.wikipedia.org/wiki/Mean-shift
-        shift_x = float(0)
-        shift_y = float(0)
-        scale_factor = float(0)
-
-        for p_temp in points:
-            # numerator computation
-            dist = _euclidean_dist(p, p_temp)
-            weight = _kernel(dist, kernel_bandwidth)
-            shift_x += p_temp[0] * weight
-            shift_y += p_temp[1] * weight
-            # denominator computation
-            scale_factor += weight
-
-        shift_x = shift_x / scale_factor
-        shift_y = shift_y / scale_factor
-        return [shift_x, shift_y]
-
-class MeanShiftStandAlone(MeanShift):
-    def cluster(self, original_points, kernel_bandwidth):
-        points = copy.deepcopy(original_points)
-        min_dist = 0.000001
-        for i in range(0, len(points)):
-            dist = sys.float_info.max
-            p_new = points[i]
-
-            while(dist > min_dist):
-                print "%f" % dist
-                p_new_start = p_new
-                p_new = self._shift_point(p_new, original_points, kernel_bandwidth)
-                dist = _euclidean_dist(p_new, p_new_start)
-            points[i] = p_new
-
-# save_path = "/Users/matt/repo_nonwork/mean_shift/python/images"
-class MeanShiftBatch(MeanShift):
-    def cluster(self, original_points, kernel_bandwidth):
-        figure_number = 0
-        points = copy.deepcopy(original_points)
-        min_dist = 0.000001
+    def cluster(self, points, kernel_bandwidth):
+        shift_points = np.array(points)
         max_min_dist = 1
-        while max_min_dist > min_dist:
-            # print "%f" % min_dist
+        while max_min_dist > MIN_DISTANCE:
             max_min_dist = 0
-            for i in range(0, len(points)):
-                p_new = points[i]
+            for i in range(0, len(shift_points)):
+                p_new = shift_points[i]
                 p_new_start = p_new
-                p_new = self._shift_point(p_new, original_points, kernel_bandwidth)
+                p_new = self._shift_point(p_new, points, kernel_bandwidth)
                 dist = _euclidean_dist(p_new, p_new_start)
                 if(dist > max_min_dist):
                     max_min_dist = dist
-                points[i] = p_new
+                shift_points[i] = p_new
+        return MeanShiftResult(points, shift_points.tolist())
 
-        return MeanShiftResult(original_points, points)
-        # # plotting code
-        # for pt in points:
-        #     plt.scatter(pt[0], pt[1])
-        # plt.axis([5, 15, 5, 15])
-        # filename = "img_%08d.png" % figure_number
-        # full_path = os.path.join(save_path, filename)
-        # plt.savefig(full_path)
-        # figure_number += 1
-        # plt.clf()
+    def _shift_point(self, point, points, kernel_bandwidth):
+        # from http://en.wikipedia.org/wiki/Mean-shift
+        points = np.array(points)
+        # numerator
+        point_distances = np.sqrt(((point - points)**2).sum(axis=1))
+        point_weights = self.kernel(point_distances, kernel_bandwidth)
+        tiled_weights = np.tile(point_weights, [len(point), 1])
+        # denominator
+        denominator = sum(point_weights)
+        shifted_point = np.multiply(tiled_weights.transpose(), points).sum(axis=0) / denominator
+        return shifted_point
 
-class MeanShiftResult:
-    def __init__(self, original_points, shifted_points):
-        self.original_points = original_points
-        self.shifted_points = shifted_points
-
-
-
-def _kernel(distance, bandwidth):
-    # Gaussian kernel
-    val = math.exp(-distance / bandwidth)**2
-    return val
+        # #  The above vectorized code is equivalent to the unrolled version below
+        # shift_x = float(0)
+        # shift_y = float(0)
+        # scale_factor = float(0)
+        # for p_temp in points:
+        #     # numerator
+        #     dist = _euclidean_dist(point, p_temp)
+        #     weight = self.kernel(dist, kernel_bandwidth)
+        #     shift_x += p_temp[0] * weight
+        #     shift_y += p_temp[1] * weight
+        #     # denominator
+        #     scale_factor += weight
+        # shift_x = shift_x / scale_factor
+        # shift_y = shift_y / scale_factor
+        # return [shift_x, shift_y]
 
 def _euclidean_dist(pointA, pointB):
     if(len(pointA) != len(pointB)):
@@ -103,3 +63,7 @@ def _euclidean_dist(pointA, pointB):
         total += (pointA[dimension] - pointB[dimension])**2
     return math.sqrt(total)
 
+class MeanShiftResult:
+    def __init__(self, original_points, shifted_points):
+        self.original_points = original_points
+        self.shifted_points = shifted_points
