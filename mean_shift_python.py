@@ -41,7 +41,6 @@ class MeanShift(object):
 class MeanShiftStandAlone(MeanShift):
     def cluster(self, original_points, kernel_bandwidth):
         points = copy.deepcopy(original_points)
-
         min_dist = 0.000001
         for i in range(0, len(points)):
             dist = sys.float_info.max
