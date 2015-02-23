@@ -2,8 +2,13 @@ import mean_shift_python as ms
 import point_sampler    
 import kde
 import matplotlib.pyplot as plt
+from numpy import genfromtxt
 
-def run():
+def load_points(filename):
+    data = genfromtxt(filename, delimiter=',')
+    return data
+
+def load_points_hardcoded():
     # get all points
     c1 = point_sampler.sample2DGaussian(
         center_x = 10, 
@@ -27,8 +32,15 @@ def run():
         num_points = 10)
 
     reference_points = c1 + c2 + c3
+    return reference_points
+
+def run():
+    reference_points = load_points("test.csv")
+    # for pt in reference_points:
+    #     print "%f %f" % (pt[0], pt[1])
+    # return
     mean_shifter = ms.MeanShift()
-    mean_shift_result = mean_shifter.cluster(reference_points, kernel_bandwidth = 1.5)
+    mean_shift_result = mean_shifter.cluster(reference_points, kernel_bandwidth = 3)
     
     for i in range(len(mean_shift_result.shifted_points)):
         original_point = mean_shift_result.original_points[i]

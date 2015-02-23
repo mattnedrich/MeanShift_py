@@ -4,7 +4,7 @@ import numpy as np
 import sys
 
 def _gaussian_kernel(distance, bandwidth):
-    val = np.exp(-distance / bandwidth)**2
+    val = np.exp(-(distance**2 / bandwidth))
     return val
 
 MIN_DISTANCE = 0.0000001
@@ -16,6 +16,7 @@ class MeanShift(object):
         shift_points = np.array(points)
         max_min_dist = 1
         while max_min_dist > MIN_DISTANCE:
+            print max_min_dist
             max_min_dist = 0
             for i in range(0, len(shift_points)):
                 p_new = shift_points[i]
