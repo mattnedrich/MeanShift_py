@@ -26,6 +26,7 @@ class MeanShift(object):
                 if(dist > max_min_dist):
                     max_min_dist = dist
                 shift_points[i] = p_new
+
         return MeanShiftResult(points, shift_points.tolist())
 
     def _shift_point(self, point, points, kernel_bandwidth):

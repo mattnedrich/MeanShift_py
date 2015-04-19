@@ -1,6 +1,4 @@
 import mean_shift_python as ms
-import point_sampler    
-import kde
 import matplotlib.pyplot as plt
 from numpy import genfromtxt
 
@@ -8,37 +6,8 @@ def load_points(filename):
     data = genfromtxt(filename, delimiter=',')
     return data
 
-def load_points_hardcoded():
-    # get all points
-    c1 = point_sampler.sample2DGaussian(
-        center_x = 10, 
-        center_y = 10, 
-        variance_x = 1.4, 
-        variance_y = 1, 
-        num_points = 40)
-
-    c2 = point_sampler.sample2DGaussian(
-        center_x = 15, 
-        center_y = 12, 
-        variance_x = 1, 
-        variance_y = 2, 
-        num_points = 20)
-
-    c3 = point_sampler.sample2DGaussian(
-        center_x = 8, 
-        center_y = 8, 
-        variance_x = 2, 
-        variance_y = 0.5, 
-        num_points = 10)
-
-    reference_points = c1 + c2 + c3
-    return reference_points
-
 def run():
-    reference_points = load_points("test.csv")
-    # for pt in reference_points:
-    #     print "%f %f" % (pt[0], pt[1])
-    # return
+    reference_points = load_points("data.csv")
     mean_shifter = ms.MeanShift()
     mean_shift_result = mean_shifter.cluster(reference_points, kernel_bandwidth = 3)
     
@@ -46,13 +15,16 @@ def run():
         original_point = mean_shift_result.original_points[i]
         converged_point = mean_shift_result.shifted_points[i]
         print "(%5.2f, %5.2f)\t->\t(%5.2f, %5.2f)" % (original_point[0], original_point[1], converged_point[0], converged_point[1])
+    
+    # plot_reference_points(reference_points)
+    # for pt in mean_shift_result.shifted_points:
+    #     plt.scatter(pt[0], pt[1], c="black")
+    
 
-    for pt in reference_points:
-        plt.scatter(pt[0], pt[1], c="red")
-    for pt in mean_shift_result.shifted_points:
-        plt.scatter(pt[0], pt[1], c="black")
-    plt.show()
-
+# def plot_reference_points(reference_points):
+#     for pt in reference_points:
+#         plt.scatter(pt[0], pt[1], c="red", zorder=2)
+    
 
 if __name__ == '__main__':
     run()
