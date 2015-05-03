@@ -5,7 +5,7 @@ import numpy as np
 import point_grouper as pg
 import mean_shift_utils as ms_utils
 
-MIN_DISTANCE = 0.0000001
+MIN_DISTANCE = 0.000001
 class MeanShift(object):
     def __init__(self, kernel = ms_utils.gaussian_kernel):
         self.kernel = kernel
@@ -15,21 +15,27 @@ class MeanShift(object):
             iteration_callback(points, 0)
         shift_points = np.array(points)
         max_min_dist = 1
-        iteration_number = 1
+        iteration_number = -1
+
+        still_shifting = [True] * points.shape[0]
         while max_min_dist > MIN_DISTANCE:
             print max_min_dist
             max_min_dist = 0
             for i in range(0, len(shift_points)):
+                iteration_number += 1
+                if not still_shifting[i]:
+                    continue
                 p_new = shift_points[i]
                 p_new_start = p_new
-                p_new = self._shift_point(p_new, points, kernel_bandwidth)
+                p_new = self._shift_point(p_new, points, kernel_bandwidth)  
                 dist = ms_utils.euclidean_dist(p_new, p_new_start)
-                if(dist > max_min_dist):
+                if dist > max_min_dist:
                     max_min_dist = dist
+                if dist < MIN_DISTANCE:
+                    still_shifting[i] = False
                 shift_points[i] = p_new
             if iteration_callback:
                 iteration_callback(shift_points, iteration_number)
-            iteration_number += 1
         point_grouper = pg.PointGrouper()
         group_assignments = point_grouper.group_points(shift_points.tolist())
         return MeanShiftResult(points, shift_points, group_assignments)
