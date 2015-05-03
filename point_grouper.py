@@ -1,5 +1,7 @@
 import sys
 import math
+import numpy as np
+import mean_shift_utils as ms_utils
 
 GROUP_DISTANCE_TOLERANCE = .1
 class PointGrouper(object):
@@ -20,7 +22,7 @@ class PointGrouper(object):
                 group_assignment.append(nearest_group_index)
                 groups[nearest_group_index].append(point)
             index += 1
-        return group_assignment
+        return np.array(group_assignment)
 
     def _determine_nearest_group(self, point, groups):
         nearest_group_index = None
@@ -35,17 +37,8 @@ class PointGrouper(object):
     def _distance_to_group(self, point, group):
         min_distance = sys.float_info.max
         for pt in group:
-            dist = _euclidean_dist(point, pt)
+            dist = ms_utils.euclidean_dist(point, pt)
             if dist < min_distance:
                 min_distance = dist
         return min_distance
-
-# Move to mean_shift_utils
-def _euclidean_dist(pointA, pointB):
-    if(len(pointA) != len(pointB)):
-        raise Exception("expected point dimensionality to match")
-    total = float(0)
-    for dimension in range(0, len(pointA)):
-        total += (pointA[dimension] - pointB[dimension])**2
-    return math.sqrt(total)
 
