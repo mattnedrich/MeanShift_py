@@ -6,6 +6,7 @@ def load_points(filename):
     data = genfromtxt(filename, delimiter=',')
     return data
 
+
 def run():
     reference_points = load_points("data.csv")
     mean_shifter = ms.MeanShift()
