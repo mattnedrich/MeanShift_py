@@ -1,6 +1,13 @@
 ## Mean Shift Clustering
 MeanShift_py is a simple implementation of [mean shift](http://en.wikipedia.org/wiki/Mean_shift) clustering in python.
 
+<table>
+<tr>
+<td><img src="sample_images/ms_2d_bw_2.gif"/></td>
+<td><img src="sample_images/ms_2d_bw_.8.gif"/></td>
+</tr>
+</table>
+
 ### Dependencies
 The only dependency is [Numpy](http://www.numpy.org/)
 
