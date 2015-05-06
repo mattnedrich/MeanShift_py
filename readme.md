@@ -1,6 +1,7 @@
 ## Mean Shift Clustering
 MeanShift_py is a simple implementation of [mean shift](http://en.wikipedia.org/wiki/Mean_shift) clustering in python.
 
+
 <table>
 <tr>
 <td><img src="sample_images/ms_2d_bw_2.gif"/></td>
@@ -34,3 +35,17 @@ original_points =  mean_shift_result.original_points
 shifted_points = mean_shift_result.shifted_points
 cluster_assignments = mean_shift_result.cluster_ids
 ```
+
+### Example
+Mean shift can be used for image segmentation. Below is an example of an image being mean shift clustered in 3D RGB space, resulting in 7 clusters.
+
+<img width=400 src="sample_images/ms_3d_image_animation.gif"/>
+
+<table border="0">
+<tr>
+<td><img src="sample_images/mean_shift_image.jpg"/></td>
+<td><img src="sample_images/mean_shift_image_clustered.png"/></td>
+</tr>
+</table>
+
+
