@@ -15,14 +15,14 @@ class MeanShift(object):
             iteration_callback(points, 0)
         shift_points = np.array(points)
         max_min_dist = 1
-        iteration_number = -1
+        iteration_number = 0
 
         still_shifting = [True] * points.shape[0]
         while max_min_dist > MIN_DISTANCE:
             print max_min_dist
             max_min_dist = 0
+            iteration_number += 1
             for i in range(0, len(shift_points)):
-                iteration_number += 1
                 if not still_shifting[i]:
                     continue
                 p_new = shift_points[i]
