@@ -13,7 +13,7 @@ MeanShift_py is a simple implementation of [mean shift](http://en.wikipedia.org/
 The only dependency is [Numpy](http://www.numpy.org/)
 
 ### Description
-The `mean_shift_python.py` module defines a class called `MeanShift`. The `MeanShift` class constructor takes in an optional kernel parameter. If no kernel is specified, a default [Gaussian](http://en.wikipedia.org/wiki/Gaussian_function) kernel is used.
+The `mean_shift.py` module defines a class called `MeanShift`. The `MeanShift` class constructor takes in an optional kernel parameter. If no kernel is specified, a default [Gaussian](http://en.wikipedia.org/wiki/Gaussian_function) kernel is used.
 
 The `cluster` method requires an array of points and a kernel bandwidth value. A optional `iteration_callback` function can also be passed in that will be called back at the end of each mean shift iteration with the current state of the algorithm (e.g., where the points are currently at, along with an iteration number).
 
@@ -25,7 +25,7 @@ After the clustering finishes, a `MeanShiftResult` object is returned, containin
 
 ### Usage
 ```python
-import mean_shift_python as ms
+import mean_shift as ms
 
 data = get_data_from_somewhere()
 mean_shifter = ms.MeanShift()

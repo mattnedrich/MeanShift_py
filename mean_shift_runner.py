@@ -1,4 +1,4 @@
-import mean_shift_python as ms
+import mean_shift as ms
 from numpy import genfromtxt
 
 def load_points(filename):
