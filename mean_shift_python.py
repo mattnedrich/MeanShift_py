@@ -19,7 +19,7 @@ class MeanShift(object):
 
         still_shifting = [True] * points.shape[0]
         while max_min_dist > MIN_DISTANCE:
-            print max_min_dist
+            # print max_min_dist
             max_min_dist = 0
             iteration_number += 1
             for i in range(0, len(shift_points)):
