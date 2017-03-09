@@ -8,6 +8,10 @@ import mean_shift_utils as ms_utils
 MIN_DISTANCE = 0.000001
 class MeanShift(object):
     def __init__(self, kernel = ms_utils.gaussian_kernel):
+
+        if kernel == 'multivariate_gaussian':
+            kernel = ms_utils.multivariate_gaussian_kernel
+
         self.kernel = kernel
 
     def cluster(self, points, kernel_bandwidth, iteration_callback = None):
@@ -43,9 +47,9 @@ class MeanShift(object):
     def _shift_point(self, point, points, kernel_bandwidth):
         # from http://en.wikipedia.org/wiki/Mean-shift
         points = np.array(points)
+
         # numerator
-        point_distances = np.sqrt(((point - points)**2).sum(axis=1))
-        point_weights = self.kernel(point_distances, kernel_bandwidth)
+        point_weights = self.kernel(point-points, kernel_bandwidth)
         tiled_weights = np.tile(point_weights, [len(point), 1])
         # denominator
         denominator = sum(point_weights)
