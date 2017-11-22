@@ -43,6 +43,28 @@ mean_shift_result = mean_shifter.cluster(data, kernel_bandwidth = [10,20,30])
 ```
 
 ### Example
+#### Plotting Into Graph
+This is example using matplotlib to plot graphs
+```python
+import mean_shift as ms
+import matplotlib.pyplot as plt
+import numpy as np
+
+data = np.genfromtxt('data.csv', delimiter=',')
+
+mean_shifter = ms.MeanShift()
+mean_shift_result = mean_shifter.cluster(data, kernel_bandwidth = 1)
+
+original_points =  mean_shift_result.original_points
+shifted_points = mean_shift_result.shifted_points
+cluster_assignments = mean_shift_result.cluster_ids
+
+plt.scatter(original_points[:,0],original_points[:,1])
+plt.scatter(shifted_points[:,0],shifted_points[:,1])
+plt.savefig("meanshift_result")
+```
+
+#### Image Segmentation
 Mean shift can be used for image segmentation. Below is an example of an image being mean shift clustered in 3D RGB space, resulting in 7 clusters.
 
 <img width=400 src="sample_images/ms_3d_image_animation.gif"/>
