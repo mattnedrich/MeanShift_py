@@ -76,6 +76,8 @@ plt.colorbar(scatter)
 fig.savefig("mean_shift_result")
 ```
 
+<img width=400 src="sample_images/mean_shift_result.png"/>
+
 #### Image Segmentation
 Mean shift can be used for image segmentation. Below is an example of an image being mean shift clustered in 3D RGB space, resulting in 7 clusters.
 
