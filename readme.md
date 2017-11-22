@@ -59,9 +59,21 @@ original_points =  mean_shift_result.original_points
 shifted_points = mean_shift_result.shifted_points
 cluster_assignments = mean_shift_result.cluster_ids
 
-plt.scatter(original_points[:,0],original_points[:,1])
-plt.scatter(shifted_points[:,0],shifted_points[:,1])
-plt.savefig("meanshift_result")
+x = original_points[:,0]
+y = original_points[:,1]
+Cluster = cluster_assignments
+centers = shifted_points
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+scatter = ax.scatter(x,y,c=Cluster,s=50)
+for i,j in centers:
+    ax.scatter(i,j,s=50,c='red',marker='+')
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+plt.colorbar(scatter)
+
+fig.savefig("mean_shift_result")
 ```
 
 #### Image Segmentation
