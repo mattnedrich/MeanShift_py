@@ -10,7 +10,6 @@ class PointGrouper(object):
         group_assignment = []
         groups = []
         group_index = 0
-        index = 0
         for point in points:
             nearest_group_index = self._determine_nearest_group(point, groups)
             if nearest_group_index is None:
@@ -21,7 +20,6 @@ class PointGrouper(object):
             else:
                 group_assignment.append(nearest_group_index)
                 groups[nearest_group_index].append(point)
-            index += 1
         return np.array(group_assignment)
 
     def _determine_nearest_group(self, point, groups):
