@@ -1,20 +1,17 @@
-
-import math
-import sys
 import numpy as np
 import point_grouper as pg
 import mean_shift_utils as ms_utils
 
 MIN_DISTANCE = 0.000001
-class MeanShift(object):
-    def __init__(self, kernel = ms_utils.gaussian_kernel):
 
+
+class MeanShift(object):
+    def __init__(self, kernel=ms_utils.gaussian_kernel):
         if kernel == 'multivariate_gaussian':
             kernel = ms_utils.multivariate_gaussian_kernel
-
         self.kernel = kernel
 
-    def cluster(self, points, kernel_bandwidth, iteration_callback = None):
+    def cluster(self, points, kernel_bandwidth, iteration_callback=None):
         if(iteration_callback):
             iteration_callback(points, 0)
         shift_points = np.array(points)
@@ -31,7 +28,7 @@ class MeanShift(object):
                     continue
                 p_new = shift_points[i]
                 p_new_start = p_new
-                p_new = self._shift_point(p_new, points, kernel_bandwidth)  
+                p_new = self._shift_point(p_new, points, kernel_bandwidth)
                 dist = ms_utils.euclidean_dist(p_new, p_new_start)
                 if dist > max_min_dist:
                     max_min_dist = dist
@@ -73,6 +70,7 @@ class MeanShift(object):
         # shift_x = shift_x / scale_factor
         # shift_y = shift_y / scale_factor
         # return [shift_x, shift_y]
+
 
 class MeanShiftResult:
     def __init__(self, original_points, shifted_points, cluster_ids):

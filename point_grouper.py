@@ -1,11 +1,11 @@
 import sys
-import math
 import numpy as np
 import mean_shift_utils as ms_utils
 
 GROUP_DISTANCE_TOLERANCE = .1
+
+
 class PointGrouper(object):
-    
     def group_points(self, points):
         group_assignment = []
         groups = []
@@ -13,7 +13,7 @@ class PointGrouper(object):
         index = 0
         for point in points:
             nearest_group_index = self._determine_nearest_group(point, groups)
-            if nearest_group_index == None:
+            if nearest_group_index is None:
                 # create new group
                 groups.append([point])
                 group_assignment.append(group_index)
@@ -41,4 +41,3 @@ class PointGrouper(object):
             if dist < min_distance:
                 min_distance = dist
         return min_distance
-
