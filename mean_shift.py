@@ -12,6 +12,7 @@ class MeanShift(object):
         self.kernel = kernel
 
     def cluster(self, points, kernel_bandwidth, iteration_callback=None):
+        points = np.array([[float(v) for v in point] for point in points])
         if(iteration_callback):
             iteration_callback(points, 0)
         shift_points = np.array(points)
